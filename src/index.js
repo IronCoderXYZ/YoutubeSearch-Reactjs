@@ -28,7 +28,10 @@ class App extends Component {
       <div>
         <SearchBar />
         <VideoDetail video={selectedVideo} />
-        <VideoList videos={videos} />
+        <VideoList
+          // Calback 1, to VideoList (updates the state with video passed up)
+          onVideoSelect={selectedVideo => this.setState({ selectedVideo })}
+          videos={videos} />
       </div>
     );
   }
