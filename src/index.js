@@ -1,5 +1,6 @@
 import React, { Component } from 'React';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
 import YTSearch from 'youtube-api-search';
 import SearchBar from './components/SearchBar';
 import VideoList from './components/VideoList';
@@ -12,8 +13,11 @@ class App extends Component {
     super(props);
 
     this.state = { videos: [], selectedVideo: null }
+    this.videoSearch('anthem');
+  }
 
-    YTSearch({key: API_KEY, term: 'hello'}, videos => {
+  videoSearch(term) {
+    YTSearch({key: API_KEY, term}, videos => {
       this.setState({
         videos,
         selectedVideo: videos[0]
@@ -24,9 +28,11 @@ class App extends Component {
   render() {
     const { videos, selectedVideo } = this.state;
 
+    const videoQuery = _.debounce((term) => { this.videoSearch(term) }, 300);
+
     return (
       <div>
-        <SearchBar />
+        <SearchBar onTermChange={videoQuery} />
         <VideoDetail video={selectedVideo} />
         <VideoList
           // Calback 1, to VideoList (updates the state with video passed up)
